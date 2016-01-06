@@ -87,16 +87,6 @@
     <Folder Include="HumanResources\XMLSchemaCollections\" />
   </ItemGroup>
   <ItemGroup>
-    <ReferenceData Include="dbo\Tables\DependsOnMattsTable.refdata.sql">
-      <DependentUpon>dbo\Tables\DependsOnMattsTable.sql</DependentUpon>
-    </ReferenceData>
-    <ReferenceData Include="dbo\Tables\MattTable.refdata.sql">
-      <DependentUpon>dbo\Tables\MattTable.sql</DependentUpon>
-    </ReferenceData>
-    <ReferenceData Include="dbo\Tables\t.refdata.sql">
-      <DependentUpon>dbo\Tables\t.sql</DependentUpon>
-    </ReferenceData>
-    <Build Include="dbo\Tables\t.sql" />
     <Build Include="dbo\Tables\ErrorLog.sql" />
     <Build Include="dbo\Tables\DatabaseLog.sql" />
     <Build Include="dbo\Tables\AWBuildVersion.sql" />
@@ -231,16 +221,14 @@
     <Build Include="HumanResources\XMLSchemaCollections\HRResumeSchemaCollection.sql" />
     <Build Include="ExtendedProperties.sql" />
     <Build Include="dbo\Tables\MattTable.sql" />
-    <Build Include="dbo\Tables\t2.sql" />
-    <ReferenceData Include="dbo\Tables\t2.refdata.sql">
-      <DependentUpon>dbo\Tables\t2.sql</DependentUpon>
-    </ReferenceData>
   </ItemGroup>
   <ItemGroup>
     <None Include="AdventureWorksSSDT.publish.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\DependsOnMattsTable.sql" />
+    <ReferenceData Include="dbo\Tables\MattTable.refdata.sql">
+      <DependentUpon>dbo\Tables\MattTable.sql</DependentUpon>
+    </ReferenceData>
   </ItemGroup>
   <Import Project="Redgate.SSDT.ReferenceDataManager.props" />
   <Import Project="Redgate.SSDT.ReferenceDataManager.targets" />
