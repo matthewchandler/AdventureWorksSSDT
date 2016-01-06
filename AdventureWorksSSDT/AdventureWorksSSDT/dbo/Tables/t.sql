@@ -1,4 +1,6 @@
-﻿CREATE TABLE [dbo].[t] (
-    [id] INT NULL
-);
-
+create table t 
+(
+id int primary key, 
+data nvarchar(max),
+furtherData nvarchar(max) null,
+)

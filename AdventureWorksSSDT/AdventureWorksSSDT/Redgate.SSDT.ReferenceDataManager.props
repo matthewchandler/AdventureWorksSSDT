@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+  This is the props file for Redgate SSDT Reference Data Manager.
+
+  If you have any problems, or need to change this file, please let us know so we can improve it for everyone.
+
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <AvailableItemName Include="ReferenceData">
+      <Visible>false</Visible>
+    </AvailableItemName>
+  </ItemGroup>
+</Project>

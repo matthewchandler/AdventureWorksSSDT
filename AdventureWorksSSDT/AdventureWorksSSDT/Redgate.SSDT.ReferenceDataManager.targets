@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+  This is the targets file for Redgate SSDT Reference Data Manager.
+
+  If you have any problems, or need to change this file, please let us know so we can improve it for everyone.
+
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ReferenceDataTaskAbsolutePath>$(MSBuildExtensionsPath)\Redgate\SSDT Extensions\Redgate.SSDT.ReferenceDataManager.MSBuildTask.dll</ReferenceDataTaskAbsolutePath>
+    <IntermediateOutputAbsolutePath Condition=" $([System.IO.Path]::IsPathRooted($(IntermediateOutputPath))) ">$(IntermediateOutputPath)</IntermediateOutputAbsolutePath>
+    <IntermediateOutputAbsolutePath Condition=" '$(IntermediateOutputAbsolutePath)' == '' ">$(ProjectDir)$(IntermediateOutputPath)</IntermediateOutputAbsolutePath>
+    <ReferenceDataBuildManifestAbsolutePath>$(IntermediateOutputAbsolutePath)$(MSBuildProjectName).ReferenceData.Build.manifest</ReferenceDataBuildManifestAbsolutePath>
+    <ReferenceDataDeploymentManifestAbsolutePath>$(IntermediateOutputAbsolutePath)$(MSBuildProjectName).ReferenceData.Deploy.manifest</ReferenceDataDeploymentManifestAbsolutePath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ReferenceDataManagerBuildContributor>Redgate.SSDT.ReferenceDataManager.BuildContributor</ReferenceDataManagerBuildContributor>
+    <ReferenceDataManagerDeploymentContributor>Redgate.SSDT.ReferenceDataManager.DeploymentContributor</ReferenceDataManagerDeploymentContributor>
+    <BuildContributors>$(BuildContributors);$(ReferenceDataManagerBuildContributor)</BuildContributors>
+    <DeploymentContributors>$(DeploymentContributors);$(ReferenceDataManagerDeploymentContributor)</DeploymentContributors>
+    <ContributorArguments>$(ContributorArguments);Redgate.SSDT.ReferenceDataManager.BuildManifestAbsolutePath=$(ReferenceDataBuildManifestAbsolutePath);Redgate.SSDT.ReferenceDataManager.DeploymentManifestAbsolutePath=$(ReferenceDataDeploymentManifestAbsolutePath)</ContributorArguments>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CleanDependsOn>
+      $(CleanDependsOn);
+      CleanReferenceData;
+    </CleanDependsOn>
+  </PropertyGroup>
+
+  <Target Name="CleanReferenceData">
+    <Delete Files="$(ReferenceDataBuildManifestAbsolutePath)" />
+    <Delete Files="$(ReferenceDataDeploymentManifestAbsolutePath)" />
+    <RemoveDir Directories="$(IntermediateOutputAbsolutePath)$(ReferenceDataManagerDeploymentContributor)" />
+  </Target>
+
+  <Target Name="_SetupBuildReferenceDataInputs">
+    <ItemGroup>
+      <__BuildReferenceDataInputItem Include="@(MSBuildAllProjects)" />
+      <__BuildReferenceDataInputItem Include="@(ReferenceData)" />
+      <__BuildReferenceDataInputItem Include="$(MSBuildProjectFullPath)" />
+    </ItemGroup>
+  </Target>
+  
+  <UsingTask TaskName="BuildReferenceDataTask" AssemblyFile="$(ReferenceDataTaskAbsolutePath)" />
+  <Target Name="BuildReferenceData"
+          DependsOnTargets="_SetupBuildReferenceDataInputs" BeforeTargets="SqlBuild"
+          Inputs="@(__BuildReferenceDataInputItem)" Outputs="$(ReferenceDataBuildManifestAbsolutePath)">
+    <Error Condition=" !Exists('$(ReferenceDataTaskAbsolutePath)') And '$(BuildingInsideVisualStudio)' != '' "
+           Text="The Redgate SSDT Reference Data Manager Visual Studio Extension is not installed; download the installer from: http://rg.gt/fruit" />
+    <Error Condition=" !Exists('$(ReferenceDataTaskAbsolutePath)') And '$(BuildingInsideVisualStudio)' == '' "
+           Text="The Redgate SSDT Reference Data Manager Build Components are not installed; download the installer from: http://rg.gt/banana" />
+    <BuildReferenceDataTask ReferenceData="@(ReferenceData)" Model="@(Build)" ReferenceDataBuildManifest="$(ReferenceDataBuildManifestAbsolutePath)" />
+    <ItemGroup>
+      <SqlBuildInputItem Include="$(ReferenceDataBuildManifestAbsolutePath)" />
+    </ItemGroup>
+  </Target>
+</Project>
